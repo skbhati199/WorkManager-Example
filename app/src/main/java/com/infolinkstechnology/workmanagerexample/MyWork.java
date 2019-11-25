@@ -8,10 +8,13 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 public class MyWork extends Worker {
+
+    public static String finshed = "finished";
 
     public MyWork(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -20,9 +23,21 @@ public class MyWork extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        displayNotificatin("task", "task has been done");
-        return Result.success();
+        String title = getInputData().getString(MainActivity.TITLE);
+        String desc = getInputData().getString(MainActivity.DECS);
+
+        displayNotificatin(title, desc);
+
+        Data data = new Data.Builder()
+                .putString(MyWork.finshed,"finshed task")
+                .build();
+
+
+        return Result.success(data);
     }
+
+
+
 
     private void displayNotificatin(String task, String task_has_been_done) {
 
